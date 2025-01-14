@@ -1,0 +1,55 @@
+#trmwin{
+ overflow-y: scroll;
+ height: 18em;
+}
+
+#trmwrap{
+ position: relative;
+ 
+ margin: 1em;
+ background: #000;
+ color: #ccc;
+ min-height: 18em;
+
+ height: 0px;
+}
+
+#txt{
+ opacity: 0%;
+ width: 100%;
+ height: 100%;
+ resize: none;
+}
+
+#trm{
+ position: absolute;
+ top: 0px;
+ left: 0px;
+ 
+ width: 100%;
+}
+
+#trm, #txt{
+ font-family: monospace;
+ font-weight: normal;
+ font-style: normal;
+ font-size: medium;
+ letter-spacing: 0px;
+ word-spacing: normal;
+ white-space: pre-wrap;
+ line-height: normal;
+ word-wrap: break-word;
+ overflow-wrap: break-word;
+ text-indent: 0px;
+ text-decoration: none;
+ text-transform: none;
+ text-align: start;
+
+ padding: 2px;
+ border: none;
+}
+
+.cursor{
+ color: #000;
+ background-color: #ccc;
+}

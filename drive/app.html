@@ -162,7 +162,7 @@
        return files;
    }
 
-   async createTextFile(name,data) {
+   async function createTextFile(name,data) {
        return new Promise(resolv=>{
            let boundary = "-------314159265358979323846";
            while(data.includes(boundary)){

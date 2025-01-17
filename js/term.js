@@ -76,10 +76,13 @@ addEventListener("load",()=>{
  write("ftp >");
 });
 
+/*
+ * dummy :-p
+ *
 function send(com){
- /// dummy :-)
  return new Promise(resolv=>{
   console.log(com);
   setTimeout(resolv,5000,com.split('').map(v=>v+v).join(''));
  });
 }
+ */

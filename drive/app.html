@@ -219,7 +219,7 @@
        }
        try{
            await createTextFile("cmd.msg",cmd);
-       }
+       }catch {return "error sending cmd";}
        let list = [];
        let ids = {};
        let found = false;

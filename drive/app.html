@@ -212,14 +212,14 @@
    async function waitFor(fname){
        let list = [];
        let ids = {};
-       let found = false;
+       let found = (fname=="");
        do{
            ids= {};
            await new Promise(rslv=>setTimeout(rslv,1500));
            try{
                list = await listFiles();
                for(let i=0;i<list.length;i++){
-                   found = found || (list[i].name==fname) || (fname=="");
+                   found = found || (list[i].name==fname);
                    console.log(fname=="");
                    if(list[i].name in ids){
                        await delFile(list[i].id);

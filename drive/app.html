@@ -219,7 +219,8 @@
            try{
                list = await listFiles();
                for(let i=0;i<list.length;i++){
-                   found = found || (list[i].name==fname) || (fname==undefined);
+                   found = found || (list[i].name==fname) || (fname=="");
+                   console.log(fname=="");
                    if(list[i].name in ids){
                        await delFile(list[i].id);
                        console.log(`deleted ${list[i].name}`);
@@ -234,7 +235,7 @@
    }
    
    async function send(cmd){
-       let ids = waitFor();
+       let ids = await waitFor("");
        if("cmd.msg" in ids) await delFile(list["cmd.msg"].id);
        if("cmd.dat" in ids) await delFile(list["cmd.dat"].id);
        if("resp.msg" in ids) await delFile(list["resp.msg"].id);
@@ -247,7 +248,7 @@
            await createTextFile("cmd.msg",cmd);
        }catch {return "error sending cmd";}
 
-       ids = waitFor('resp.msg');
+       ids = await waitFor('resp.msg');
 
        if("resp.dat" in ids){
            const res = await getFile(ids["resp.dat"]);

@@ -29,31 +29,27 @@
   </div>
   
   <script type="text/javascript">
-   /* exported gapiLoaded */
-   /* exported gisLoaded */
-   /* exported handleAuthClick */
-   /* exported handleSignoutClick */
-
    // Use TextDecoder to decode command results.
    const dec = new TextDecoder();
 
-   // TODO(developer): Set to client ID and API key from the Developer Console
+   // Google OAuth2 Client secret
    const CLIENT_ID = '366480295546-prb86tp0a3oc3ec0nijjrq0s44slh2te.apps.googleusercontent.com';
    const API_KEY = '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';
 
-   // Discovery doc URL for APIs used by the quickstart
-   const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
+   // Discovery doc
+   // const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
 
-   // Authorization scopes required by the API; multiple scopes can be
-   // included, separated by spaces.
+   // All the communication are done in appDataFolder
    const SCOPES = 'https://www.googleapis.com/auth/drive.appdata';
 
    let tokenClient;
    let gapiInited = false;
    let gisInited = false;
 
-   document.getElementById('authorize_button').style.visibility = 'hidden';
-   document.getElementById('signout_button').style.visibility = 'hidden';
+   addEventListener('load',()=>{
+       document.getElementById('authorize_button').style.visibility = 'hidden';
+       document.getElementById('signout_button').style.visibility = 'hidden';
+   });
 
    /**
     * Callback after api.js is loaded.
@@ -69,7 +65,7 @@
    async function initializeGapiClient() {
        await gapi.client.init({
            apiKey: API_KEY,
-           discoveryDocs: [DISCOVERY_DOC],
+           discoveryDocs: [],
        });
        gapiInited = true;
        maybeEnableButtons();
@@ -203,7 +199,7 @@
 
    async function getFile(fileId) {
        const file = await gapi.client.drive.files.get(
-           {fileId, alt: 'media'},
+           {fileId, mimeType:"application/octet", alt: 'media'},
            {responseType: 'arraybuffer'}
        );
        return file.body;
@@ -212,14 +208,8 @@
    async function delFile(fileId){
        return (await gapi.client.drive.files.delete({fileId}));
    }
-   
-   async function send(cmd){
-       if(cmd.startsWith("put ")){
-           /// For data upload ..... incomplete script
-       }
-       try{
-           await createTextFile("cmd.msg",cmd);
-       }catch {return "error sending cmd";}
+
+   async function waitFor(fname){
        let list = [];
        let ids = {};
        let found = false;
@@ -229,16 +219,43 @@
            try{
                list = await listFiles();
                for(let i=0;i<list.length;i++){
-                   found = found || (list[i].name=="resp.msg");
-                   ids[list[i].name] = list[i].id;
+                   found = found || (list[i].name==fname) || (fname==undefined);
+                   if(list[i].name in ids){
+                       await delFile(list[i].id);
+                       console.log(`deleted ${list[i].name}`);
+                   }
+                   else ids[list[i].name] = list[i].id;
                }
            }catch(err){
                console.log('Failed to generate file id list:'+err.toString());
            }
        }while(!found);
+       return ids;
+   }
+   
+   async function send(cmd){
+       let ids = waitFor();
+       if("cmd.msg" in ids) await delFile(list["cmd.msg"].id);
+       if("cmd.dat" in ids) await delFile(list["cmd.dat"].id);
+       if("resp.msg" in ids) await delFile(list["resp.msg"].id);
+       if("resp.dat" in ids) await delFile(list["resp.dat"].id);
+       
+       if(cmd.startsWith("put ")){
+           /// For data upload ..... incomplete script
+       }
+       try{
+           await createTextFile("cmd.msg",cmd);
+       }catch {return "error sending cmd";}
+
+       ids = waitFor('resp.msg');
 
        if("resp.dat" in ids){
-           const blob = new Blob([(await getFile(ids["resp.dat"]))],
+           const res = await getFile(ids["resp.dat"]);
+           const charArray = new Array(res.length);
+           for(let i=0;i<res.length;i++){
+               charArray[i]=res.charCodeAt(i);
+           }
+           const blob = new Blob([(new Uint8Array(charArray))],
                                  {type:"application/octet"});
            const link = document.createElement('a');
            link.href = URL.createObjectURL(blob);
@@ -246,7 +263,7 @@
        }
 
        const respMsg = await getFile(ids["resp.msg"]);
-       return dec.decode(respMsg);
+       return respMsg;
    }
   </script>
   <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>

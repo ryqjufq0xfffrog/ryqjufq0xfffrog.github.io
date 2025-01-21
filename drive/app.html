@@ -37,7 +37,7 @@
    const API_KEY = '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';
 
    // Discovery doc
-   // const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
+   const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
 
    // All the communication are done in appDataFolder
    const SCOPES = 'https://www.googleapis.com/auth/drive.appdata';
@@ -65,7 +65,7 @@
    async function initializeGapiClient() {
        await gapi.client.init({
            apiKey: API_KEY,
-           discoveryDocs: [],
+           discoveryDocs: [DISCOVERY_DOC],
        });
        gapiInited = true;
        maybeEnableButtons();

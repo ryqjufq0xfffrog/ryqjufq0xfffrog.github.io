@@ -236,10 +236,10 @@
    
    async function send(cmd){
        let ids = await waitFor("");
-       if("cmd.msg" in ids) await delFile(ids["cmd.msg"].id);
-       if("cmd.dat" in ids) await delFile(ids["cmd.dat"].id);
-       if("resp.msg" in ids) await delFile(ids["resp.msg"].id);
-       if("resp.dat" in ids) await delFile(ids["resp.dat"].id);
+       if("cmd.msg" in ids) await delFile(ids["cmd.msg"]);
+       if("cmd.dat" in ids) await delFile(ids["cmd.dat"]);
+       if("resp.msg" in ids) await delFile(ids["resp.msg"]);
+       if("resp.dat" in ids) await delFile(ids["resp.dat"]);
        
        if(cmd.startsWith("put ")){
            /// For data upload ..... incomplete script

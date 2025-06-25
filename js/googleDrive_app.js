@@ -3,7 +3,7 @@ const dec = new TextDecoder();
 
 // Google OAuth2 Client secret
 const CLIENT_ID = '366480295546-prb86tp0a3oc3ec0nijjrq0s44slh2te.apps.googleusercontent.com';
-const API_KEY = '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';
+const API_KEY = 'AIzaSyB4E46Snvv1nEZro_Ju_AXpnEcC6AAJ7_0';
 
 // Discovery doc
 const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
